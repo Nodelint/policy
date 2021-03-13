@@ -1,6 +1,6 @@
 // Import third-party dependencies
 import oop from "@slimio/oop";
-import { paramCase } from "change-case";
+import changeCase from "change-case";
 
 // Import internal dependencies
 import { Events, EventSymbol } from "./Constants.js";
@@ -13,12 +13,7 @@ export default class Event {
     #resolution = null;
 
     static sanitizeName(name) {
-        const safeName = oop.toString(name);
-        if (safeName.trim() === "") {
-            throw new Error("Event name cannot be an empty string!");
-        }
-
-        return paramCase(safeName);
+        return changeCase.paramCase(oop.toString(name, { allowEmptyString: false }));
     }
 
     constructor(options = Object.create(null)) {
@@ -29,6 +24,7 @@ export default class Event {
 
         this.name = Event.sanitizeName(options.name);
         this.id = Symbol(this.name);
+        this.enabled = true;
         this.type = options.type;
         this.i18n = oop.toString(options.i18n);
         this.parametersJSONSchema = oop.toPlainObject(options.parameters);

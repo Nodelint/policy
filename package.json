@@ -27,7 +27,7 @@
     "@slimio/eslint-config": "^4.1.0"
   },
   "dependencies": {
-    "@slimio/oop": "^1.0.0",
+    "@slimio/oop": "^2.0.0",
     "change-case": "^4.1.2",
     "rosetta": "^1.1.0"
   }

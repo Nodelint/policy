@@ -1,3 +1,8 @@
+// Import Node.js Dependencies
+import { pathToFileURL } from "url";
+import fs from "fs/promises";
+import path from "path";
+
 // Import third-party dependencies
 import oop from "@slimio/oop";
 import rosetta from "rosetta";
@@ -10,12 +15,15 @@ const kModeSymSet = new Set(Object.values(Mode));
 const kDefaultOptions = { mode: Mode.Asynchronous, defaultLang: "english" };
 
 export default class Policy {
-    static async loadi18n(dir) {
-        const i18n = {};
-        // TODO: load all i18n files (from dir) and combine them here!
-        console.log(dir);
+    static async loadi18n(i18nDir) {
+        const filesInDir = (await fs.readdir(i18nDir, { withFileTypes: true }))
+            .filter((dirent) => dirent.isFile() && path.extname(dirent.name) === ".js");
 
-        return rosetta(i18n);
+        const allImportPromises = filesInDir
+            .map((dirent) => import(pathToFileURL(path.join(i18nDir, dirent.name))));
+        const allTranslations = await Promise.all(allImportPromises);
+
+        return rosetta({ ...allTranslations });
     }
 
     static dataEvent(id, data) {
@@ -35,19 +43,19 @@ export default class Policy {
             throw new TypeError("options.mode must be a valid Policy mode (Asynchronous or Synchronous).");
         }
 
+        this.name = oop.toString(options.name, { allowEmptyString: false });
         this.mode = options.mode;
-        this.defaultLang = oop.toString(options.defaultLang);
+        this.defaultLang = oop.toNullableString(options.defaultLang);
         this.scope = new Set(oop.toIterable(options.scope));
 
-        const [i18n, events] = asserti18n(options.i18n, options.events);
-        this.events = events;
-        this.i18n = i18n;
+        this.eventsMap = new Map();
+        for (const [eventName, event] of Object.entries(options.events)) {
+            this.eventsMap.set(eventName, event.default);
+        }
+        this.events = [...this.eventsMap.values()];
+        this.i18n = options.i18n;
+        this.main = options.main;
+
+        this.i18n.locale(this.defaultLang);
     }
 }
-
-function asserti18n(i18n, rawEvents) {
-    const events = [...oop.toIterable(rawEvents)];
-
-    return [rosetta(i18n), events];
-}
-
