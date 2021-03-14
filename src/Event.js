@@ -7,7 +7,7 @@ import { Events, EventSymbol } from "./Constants.js";
 
 // CONSTANTS
 const kEventSymSet = new Set(Object.values(Events));
-const kDefaultOptions = { type: Events.Warning, parameters: {} };
+const kDefaultOptions = { type: Events.Warning, parameters: {}, enabled: true };
 
 export default class Event {
     #resolution = null;
@@ -24,7 +24,7 @@ export default class Event {
 
         this.name = Event.sanitizeName(options.name);
         this.id = Symbol(this.name);
-        this.enabled = true;
+        this.enabled = options.enabled ?? true;
         this.type = options.type;
         this.i18n = oop.toString(options.i18n);
         this.parametersJSONSchema = oop.toPlainObject(options.parameters);
