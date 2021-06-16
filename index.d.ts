@@ -1,3 +1,5 @@
+import { Rosetta } from "rosetta";
+
 export declare const EventSymbol: unique symbol;
 export declare const DataEventSymbol: unique symbol;
 export declare const Events: Readonly<{
@@ -15,29 +17,29 @@ export class Event {
   #private;
   name: string;
   id: symbol;
-  enabled: any;
-  type: any;
+  enabled: boolean;
+  type: Symbol;
   i18n: string;
   parametersJSONSchema: object;
-  static sanitizeName(name: any): string;
-  constructor(options?: any);
-  set resolution(options?: any);
+  static sanitizeName(name: string): string;
+  constructor(options?: object);
+  set resolution(options?: object);
   get resolution(): any;
 }
 
 export default class Policy {
   name: string;
-  mode: any;
+  mode: Symbol;
   defaultLang: string;
-  scope: Set<any>;
-  eventsMap: Map<any, any>;
-  events: any[];
-  i18n: any;
+  scope: Set<string>;
+  eventsMap: Map<string, Event>;
+  events: Event[];
+  i18n: Rosetta<T>;
   main: any;
-  static loadi18n(i18nDir: any): Promise<any>;
-  static dataEvent(id: any, data: any): {
+  static loadi18n<T>(i18nDir: string): Promise<Rosetta<T>>;
+  static dataEvent(id: symbol, data: any): {
       id: symbol;
       data: any;
   };
-  constructor(options?: any);
+  constructor(options?: object);
 }
