@@ -23,11 +23,11 @@ export class Event {
   parametersJSONSchema: object;
   static sanitizeName(name: string): string;
   constructor(options?: object);
-  set resolution(options?: object);
+  set resolution(options: object);
   get resolution(): any;
 }
 
-export default class Policy {
+export default class Policy<T>{
   name: string;
   mode: Symbol;
   defaultLang: string;
