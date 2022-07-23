@@ -7,7 +7,6 @@ import { expect } from "chai";
 import rosetta from "rosetta";
 
 // Import Internal Dependencies
-import { Mode, DataEventSymbol } from "../src/constants.js";
 import Policy, { PolicyOptions } from "../src/policy.js";
 
 // CONSTANTS
@@ -15,12 +14,13 @@ const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 const kFixturesDir = path.join(__dirname, "fixtures");
 
 function getDummyPolicyOptions() {
-  const main = () => void 0;
+  async function* main() {
+    yield Symbol("foo");
+  }
 
   const options: PolicyOptions<any> = {
     name: "dummyPolicy",
-    mode: Mode.Synchronous,
-    main: main as any,
+    main,
     defaultLang: "english",
     scope: [".eslintrc"],
     i18n: rosetta(),
@@ -42,7 +42,7 @@ describe("Policy", () => {
 
       expect(message.id).to.equal(sym);
       expect(message.data).to.equal("hello-world");
-      expect(message[DataEventSymbol]).to.equal(true);
+      expect(message[Policy.DataEventSymbol]).to.equal(true);
     });
   });
 
@@ -60,13 +60,17 @@ describe("Policy", () => {
   });
 
   describe("constructor", () => {
-    it("should", () => {
+    it("should create a new Policy instance", async() => {
       const policy = new Policy(getDummyPolicyOptions());
 
       expect(policy.name).to.equal("dummyPolicy");
-      expect(policy.mode).to.equal(Mode.Synchronous);
-      expect(policy.defaultLang).to.equal("english");
+      expect(policy.defaultLang).to.equal(Policy.DefaultI18nLanguage);
       expect(policy.events.size).to.equal(0);
+
+      const iterator = policy.main();
+      const { value } = await iterator.next();
+      expect(typeof value).to.equal("symbol");
+      expect(value.description).to.equal("foo");
     });
   });
 });

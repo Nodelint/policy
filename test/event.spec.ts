@@ -2,7 +2,6 @@
 import { expect } from "chai";
 
 // Import Internal Dependencies
-import { Events, EventSymbol } from "../src/constants.js";
 import Event, { EventOptions } from "../src/event.js";
 
 // CONSTANTS
@@ -13,7 +12,7 @@ const kDummyEventOptions: EventOptions = {
   parameters: {
     foo: "bar"
   },
-  type: Events.Log
+  type: Event.Severities.Log
 };
 
 describe("Event", () => {
@@ -51,7 +50,7 @@ describe("Event", () => {
       expect(instance.parametersJSONSchema).to.deep.equal(kDummyEventOptions.parameters);
       expect(instance.resolutionDescription).to.equal(null);
 
-      expect(instance[EventSymbol]).to.equal(true);
+      expect(instance[Event.Symbol]).to.equal(true);
     });
 
     it("should sanitize the event name and set the name as the id symbol description", () => {
@@ -83,7 +82,7 @@ describe("Event", () => {
         }
       });
 
-      expect(instance.type).to.equal(Events.Warning);
+      expect(instance.type).to.equal(Event.Severities.Warning);
     });
 
     it("should set the .parametersJSONSchema property to empty plainObject by default if no value provided", () => {

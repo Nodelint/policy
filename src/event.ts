@@ -2,13 +2,6 @@
 import oop from "@slimio/oop";
 import changeCase from "change-case";
 
-// Import internal dependencies
-import { Events, EventSymbol } from "./constants.js";
-
-// CONSTANTS
-const kEventSymSet = new Set(Object.values(Events));
-const kDefaultOptions = { type: Events.Warning, parameters: {}, enabled: true };
-
 export interface EventMessage {
   /** Unique id of the event */
   id: symbol;
@@ -49,6 +42,14 @@ export interface EventOptions {
 }
 
 export default class Event {
+  static Symbol = Symbol.for("NodeLintEvent");
+  static Severities = Object.freeze({
+    Log: Symbol("logEvent"),
+    Information: Symbol("informationEvent"),
+    Warning: Symbol("warningEvent"),
+    Error: Symbol("errorEvent")
+  });
+
   public name: string;
   public id: symbol;
   public enabled: boolean;
@@ -64,8 +65,14 @@ export default class Event {
   }
 
   constructor(options: EventOptions) {
-    const finalOptions = Object.assign({}, kDefaultOptions, options);
-    if (!kEventSymSet.has(finalOptions.type)) {
+    const finalOptions = Object.assign(
+      {},
+      { type: Event.Severities.Warning, parameters: {}, enabled: true },
+      options
+    );
+
+    const severities = new Set(Object.values(Event.Severities));
+    if (!severities.has(finalOptions.type)) {
       throw new TypeError("options.type must be a valid Event type!");
     }
 
@@ -76,7 +83,10 @@ export default class Event {
     this.i18n = oop.toString(finalOptions.i18n, { allowEmptyString: false });
     this.parametersJSONSchema = oop.toPlainObject(finalOptions.parameters);
 
-    Object.defineProperty(this, EventSymbol, { value: true, enumerable: false });
+    Object.defineProperty(this, Event.Symbol, {
+      value: true,
+      enumerable: false
+    });
   }
 
   set resolution(options: ResolutionOptions) {
