@@ -73,10 +73,10 @@ export default class Event {
     this.id = Symbol(this.name);
     this.enabled = finalOptions.enabled ?? true;
     this.type = finalOptions.type;
-    this.i18n = oop.toString(finalOptions.i18n);
-    this.parametersJSONSchema = oop.toPlainObject(options.parameters);
+    this.i18n = oop.toString(finalOptions.i18n, { allowEmptyString: false });
+    this.parametersJSONSchema = oop.toPlainObject(finalOptions.parameters);
 
-    Reflect.defineProperty(this, EventSymbol, { value: true, enumerable: false });
+    Object.defineProperty(this, EventSymbol, { value: true, enumerable: false });
   }
 
   set resolution(options: ResolutionOptions) {

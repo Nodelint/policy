@@ -2,8 +2,8 @@
   "name": "@nodelint/policy",
   "version": "1.0.0",
   "description": "Nodelint policy",
-  "main": "index.js",
   "type": "module",
+  "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": "./dist/index.js",
   "scripts": {
@@ -33,17 +33,17 @@
   },
   "homepage": "https://github.com/Nodelint/policy#readme",
   "devDependencies": {
-    "@nodesecure/eslint-config": "^1.3.1",
-    "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.1.0",
-    "@types/node": "^17.0.17",
-    "c8": "^7.11.0",
+    "@nodesecure/eslint-config": "^1.4.1",
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.0.6",
+    "c8": "^7.12.0",
     "chai": "^4.3.6",
     "cross-env": "^7.0.3",
-    "eslint": "^8.9.0",
-    "mocha": "^9.2.0",
-    "ts-node": "^10.5.0",
-    "typescript": "^4.5.5"
+    "eslint": "^8.20.0",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
   },
   "dependencies": {
     "@slimio/oop": "^2.0.0",

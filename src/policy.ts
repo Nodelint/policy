@@ -52,10 +52,9 @@ export default class Policy<T> {
   public mode: symbol;
   public defaultLang: string | null;
   public scope: Set<string>;
-  public eventsMap: Map<string, Event>;
+  public events: Map<string, Event>;
   public main: IterableIterator<PolicyEventMessage> | AsyncIterableIterator<PolicyEventMessage>;
   public i18n: Rosetta<T>;
-  public events: Event[];
 
   constructor(options: PolicyOptions<T>) {
     const finalOptions = Object.assign({}, kDefaultOptions, options);
@@ -67,8 +66,7 @@ export default class Policy<T> {
     this.mode = finalOptions.mode;
     this.defaultLang = oop.toNullableString(finalOptions.defaultLang);
     this.scope = new Set(oop.toIterable(finalOptions.scope));
-    this.eventsMap = new Map(Object.entries(finalOptions.events));
-    this.events = [...this.eventsMap.values()];
+    this.events = new Map(Object.entries(finalOptions.events));
     this.main = finalOptions.main;
 
     this.i18n = finalOptions.i18n;
@@ -84,7 +82,8 @@ export default class Policy<T> {
       .map((dirent) => import(pathToFileURL(path.join(i18nDir, dirent.name))));
     const allTranslations = await Promise.all(allImportPromises);
 
-    return rosetta({ ...allTranslations });
+    // @ts-ignore
+    return rosetta(Object.assign(...allTranslations));
   }
 
   static createMessage(id: symbol, data: any): EventMessage {
@@ -93,7 +92,7 @@ export default class Policy<T> {
     }
 
     const payload = { id, data };
-    Reflect.defineProperty(payload, DataEventSymbol, { value: true, enumerable: false });
+    Object.defineProperty(payload, DataEventSymbol, { value: true, enumerable: false });
 
     return payload;
   }
