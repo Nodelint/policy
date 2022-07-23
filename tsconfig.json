@@ -9,6 +9,7 @@
       "esModuleInterop": true,
       "resolveJsonModule": false,
       "skipDefaultLibCheck": true,
+      "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
       "sourceMap": true,
       "rootDir": "./src",
