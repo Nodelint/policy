@@ -40,12 +40,14 @@ export interface PolicyOptions<T> {
   /**
    * Main executor for the policy (a Synchronous or Asynchronous generator).
    */
-  main: IterableIterator<PolicyEventMessage> | AsyncIterableIterator<PolicyEventMessage>;
+  main: Generator<PolicyEventMessage> | AsyncGenerator<PolicyEventMessage>;
   /**
    * List of events attached to the policy.
    */
   events: Record<string, Event>;
 }
+
+export type i18nEntry = Record<string, any>;
 
 export default class Policy<T> {
   public name: string;
@@ -77,13 +79,17 @@ export default class Policy<T> {
     const filesInDir = (await fs.readdir(i18nDir, { withFileTypes: true }))
       .filter((dirent) => dirent.isFile() && path.extname(dirent.name) === ".js");
 
-    const allImportPromises = filesInDir
-      // @ts-ignore
-      .map((dirent) => import(pathToFileURL(path.join(i18nDir, dirent.name))));
-    const allTranslations = await Promise.all(allImportPromises);
+    const dictArr: i18nEntry[] = [];
+    for (const dirent of filesInDir) {
+      const i18nLang = await import(
+        pathToFileURL(path.join(i18nDir, dirent.name)).toString()
+      );
+
+      dictArr.push({ ...i18nLang });
+    }
 
     // @ts-ignore
-    return rosetta(Object.assign(...allTranslations));
+    return rosetta(Object.assign(...dictArr));
   }
 
   static createMessage(id: symbol, data: any): EventMessage {
