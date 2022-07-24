@@ -7,7 +7,7 @@ import { expect } from "chai";
 import rosetta from "rosetta";
 
 // Import Internal Dependencies
-import Policy, { PolicyOptions } from "../src/policy.js";
+import { Policy, PolicyOptions } from "../src/index.js";
 
 // CONSTANTS
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));

@@ -8,7 +8,7 @@ import oop from "@slimio/oop";
 import rosetta, { Rosetta } from "rosetta";
 
 // Import internal dependencies
-import Event, { EventMessage } from "./event.js";
+import { Event, EventMessage } from "./event.js";
 
 export type PolicyEventMessage = symbol | EventMessage;
 
@@ -42,7 +42,7 @@ export interface PolicyOptions<T> {
 
 export type i18nEntry = Record<string, any>;
 
-export default class Policy<T> {
+export class Policy<T> {
   static DataEventSymbol = Symbol.for("NodeLintDataEvent");
   static DefaultI18nLanguage = "english";
 

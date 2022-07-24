@@ -41,7 +41,7 @@ export interface EventOptions {
   parameters?: object;
 }
 
-export default class Event {
+export class Event {
   static Symbol = Symbol.for("NodeLintEvent");
   static Severities = Object.freeze({
     Log: Symbol("logEvent"),

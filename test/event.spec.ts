@@ -2,7 +2,7 @@
 import { expect } from "chai";
 
 // Import Internal Dependencies
-import Event, { EventOptions } from "../src/event.js";
+import { Event, EventOptions } from "../src/index.js";
 
 // CONSTANTS
 const kDummyEventOptions: EventOptions = {
